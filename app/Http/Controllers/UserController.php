@@ -9,7 +9,7 @@ class UserController extends Controller
 {
 
     public function user(){
-        return response()->json(Auth::user()->with('Discounts.Discount')->first(), 200);
+        return response()->json(Auth::user()->with(['Discounts.Discount','ActiveDiscount.Discount'])->first(), 200);
     }
 
 }

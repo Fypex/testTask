@@ -54,5 +54,8 @@ class User extends Authenticatable
     public function Discounts(){
         return $this->hasMany(UserDiscount::class, 'user_id', 'id');
     }
+    public function ActiveDiscount(){
+        return $this->hasOne(UserDiscount::class, 'user_id', 'id')->where('active', 1);
+    }
 
 }

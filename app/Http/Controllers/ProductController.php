@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
-    private $message = 'Thank you for the order. Your order #{order_id} has been sent for processing';
-
 
     public function getProducts(){
         return response()->json(Product::all(), 200);
@@ -32,11 +30,8 @@ class ProductController extends Controller
         $order = new OrderController();
         $order_id = $order->placeOrder($request->products);
 
-        return response()->json($this->successMessage($order_id), 200);
+        return response()->json($order_id, 200);
 
     }
 
-    private function successMessage($order_id){
-        return str_replace('{order_id}', $order_id, $this->message);
-    }
 }
