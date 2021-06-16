@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property mixed product_id
- * @property mixed|string amount
- * @property mixed|string price
- * @property mixed|string user_id
  * @property mixed id
+ * @property mixed|null user_id
+ * @property mixed total
+ * @property mixed subtotal
+ * @property float|mixed discount
  */
 class Order extends Model
 {

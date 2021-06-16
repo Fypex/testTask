@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\Api\Auth\AuthController;
 use \App\Http\Controllers\ProductController;
+use \App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,6 +17,13 @@ use \App\Http\Controllers\ProductController;
 */
 Route::post('signIn', [AuthController::class, 'signIn'])->name('login');
 Route::post('signUp', [AuthController::class, 'signUp']);
+Route::post('logout', [AuthController::class, 'logout']);
+
+
 
 Route::get('products', [ProductController::class, 'getProducts']);
 Route::post('products/order', [ProductController::class, 'order']);
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('user', [UserController::class, 'user']);
+});

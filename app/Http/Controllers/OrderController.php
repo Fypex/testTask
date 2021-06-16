@@ -17,8 +17,7 @@ class OrderController extends Controller
 
         $products = collect($products);
         $products = $products->unique('id');
-
-        $products = $this->calculateProducts($products);
+        $products = $this->calculateProducts($products, $user);
         list($total, $subtotal, $discount) = $this->calculateOrder($products);
 
         $order = new Order();
@@ -44,8 +43,8 @@ class OrderController extends Controller
 
     }
 
-    private function calculateProducts($products_collection){
-        $user = request()->user('sanctum');
+    private function calculateProducts($products_collection, $user){
+
         $discount_percent = 0;
 
         if ($user){
@@ -56,14 +55,15 @@ class OrderController extends Controller
                                 ->value('discount_percent');
         }
 
-        $ids = $products_collection->implode(['id'], ',');
-        $products = Product::findMany(explode(',',$ids));
+        $ids = $products_collection->map(function($item) {
+            return $item['id'];
+        });
+
+        $products = Product::findMany($ids);
         $stored_items = [];
 
-        foreach ($products_collection as $key => $product_collection){
-            $amount = $product_collection['amount'];
-            $product = $products[$key];
-
+        foreach ($products as $key => $product){
+            $amount = $products_collection[$key]['amount'];
             $id = $product->id;
             $price = $product->price * $amount;
 

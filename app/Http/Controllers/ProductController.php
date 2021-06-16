@@ -14,7 +14,7 @@ class ProductController extends Controller
 
 
     public function getProducts(){
-        return response()->json(Product::paginate(5), 200);
+        return response()->json(Product::all(), 200);
     }
 
     public function order(Request $request){

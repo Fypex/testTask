@@ -15,15 +15,17 @@ class AuthController extends Controller
 {
     public function signIn(Request $request){
 
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
 
-        if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){
-            $user = Auth::user();
-            $user->tokens()->delete();
-            $token = $user->createToken($request->email)->plainTextToken;
-            return response(['token' => $token], 200);
-        }else{
-            return response('Unauthorised', 401);
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            return response()->json(true, 200);
         }
+
+        return response('The provided credentials do not match our records.', 400);
 
     }
 
@@ -57,7 +59,14 @@ class AuthController extends Controller
             ]);
         }
 
-        $token = $user->createToken('default')->plainTextToken;
-        return response(['token' => $token], 200);
+        return response(true, 200);
+    }
+
+    public function logout(Request $request){
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return response(true, 200);
     }
 }
